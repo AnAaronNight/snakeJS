@@ -1,8 +1,6 @@
 // Declare Variables
 let items = [];
 let size = 13;
-let cellSize = (screen.height - 450)/size;
-console.log(cellSize)
 let snake = {
   len: 3,
   pos: [
@@ -24,11 +22,11 @@ function generateBoard() {
   // empties the live version of the board
   items = [];
   // creates the board
-  for (var i = 0; i < size; i++) {
+  for (let i = 0; i < size; i++) {
     // adds a new row to the board with a single item
-    items.push(["⬛"])
+    items.push(["⬛"]);
     // adds the rest of the items to the row
-    for (var n = 1; n < size; n++) {
+    for (let n = 1; n < size; n++) {
       items[i][n] = "⬛";
     }
   }
@@ -37,25 +35,27 @@ function updateBoard() {
   // creates a new string called output
   let output = "";
   // adds to the string either the item in the board or a a line break between rows
-  for (var n = 0; n < items.length; n++) {
-    for (var i = 0; i < items[n].length; i++) {output += items[n][i]}
+  items.forEach(elementA => {
+    elementA.forEach(elementB => {
+      output += elementB;
+    });
     output += "<br>"
-  }
+  });
   // sets the html display to the string we created
   document.getElementById("demo").innerHTML = output;
 }
 function drawSnake() {
   // loops through the snake's ordered pairs and sets the value at the corresponding spot on the board to a snake block
-  for (var i = 0; i < (snake.pos.length); i++) {
+  for (let i = 0; i < (snake.pos.length); i++) {
     items[snake.pos[i][1]][snake.pos[i][0]] = "⬜";
   }
 }
 function updateSnakePos() {
-  if (snake.dead == false) {
+  if (!snake.dead) {
     // set the new head position to newPos
     snake.pos.push(newPos)
     // if the snake isn't eating, we want to get rid of the tail block
-    if (snake.eating == false) {
+    if (!snake.eating) {
       snake.pos = snake.pos.slice(1);
     }
     // this makes sure we don't grow indefinitely after eating
@@ -64,7 +64,7 @@ function updateSnakePos() {
 }
 function generateApple() {
   // this loop runs until the apple does not exist inside the snake
-  for (var i = 0; items[applePos[1]][applePos[0]] == "⬜"; i++) {
+  for (let i = 0; items[applePos[1]][applePos[0]] == "⬜"; i++) {
     // if this is the first time this loop runs on this iteration of the function, a point is rewarded to the player
     if (i == 0) {snake.len++; snake.eating = true; document.getElementById("score").innerHTML = "~ " + (snake.len - 3) + " ~";}
     // makes random x and y positions for the apple
@@ -76,7 +76,7 @@ function generateApple() {
 }
 function gameTick() {
   // this if statement is designed so that it only runs if the player is ready to start
-  if (gameStarted == true || inputQueue.length > 0) {
+  if (gameStarted || inputQueue.length > 0) {
     // if this is the first time this code has ever been ran, this ensures that the game continues to run smoothly
     gameStarted = true;
     // if there's a new input, we set the current direction to whatever the most recent input is
@@ -88,7 +88,7 @@ function gameTick() {
     // we define a new snake position based on the previous one and the direction, assigning it to newPos
     newPos = [snake.pos[snake.pos.length-1][0] + snake.dir[0], snake.pos[snake.pos.length-1][1] + snake.dir[1]]
     // probably ought to check the wall collision so we can display a proper death message
-    checkWallCollision();
+    snake.dead = checkWallCollision();
     // now that we sorta know if it's dead or not, we can move the snake
     updateSnakePos();
   }
@@ -98,16 +98,12 @@ function gameTick() {
   generateApple();
   updateBoard();
   // if the snake isn't dead, we want to have another game tick an eighth of a second later. if it is, we want to display a restart text
-  if (snake.dead == false) {
-    setTimeout(() => {gameTick();}, 125);
-  } else {
-    document.getElementById("restart").innerHTML = "~ press space to restart ~";
-  }
+  if (!snake.dead) { setTimeout(() => {gameTick();}, 125) } 
+  else { document.getElementById("restart").innerHTML = "~ press space to restart ~" }
 }
 function checkWallCollision() {
-  if(size <= newPos[0] || 0 > newPos[0] || size <= newPos[1] || 0 > newPos[1]) {
-    snake.dead = true
-  }
+  if (size <= newPos[0] || 0 > newPos[0] || size <= newPos[1] || 0 > newPos[1]) { return true }
+  return false;
 }
 function checkSelfCollision() {
   // makes an array called r that contains all unique values of our snake's position
@@ -121,5 +117,5 @@ function checkSelfCollision() {
   }
 }
 // starts the game ticks
-document.getElementById("demo").style.fontSize = cellSize + "px";
+document.getElementById("demo").style.fontSize = 61.75 / size + "vh"; // cellSize + "px";
 gameTick();

@@ -7,22 +7,30 @@
     <script type="text/javascript">
       document.addEventListener('keydown', logKey);
       function logKey(e) {
-        if (`${e.code}` == "Space" && snake.dead == true) {
-          document.location.reload();
+        let nextDir = [];
+        if (inputQueue.length != 0) { nextDir = inputQueue[inputQueue.length - 1] }
+        else { nextDir = snake.dir }
+
+        if (`${e.code}` == "Space" && snake.dead) { document.location.reload() }
+        switch (e.code) {
+          case `ArrowRight`:
+          case `KeyD`:
+            if (nextDir[0] == 0 || !gameStarted) { inputQueue.push([1,0]) }
+            break;
+          case `ArrowLeft`:
+          case `KeyA`:
+            if (nextDir[0] == 0) { inputQueue.push([-1,0]) }
+            break;
+          case `ArrowDown`:
+          case `KeyS`:
+            if (nextDir[1] == 0) { inputQueue.push([0,1]) }
+            break;
+          case `ArrowUp`:
+          case `KeyW`:
+            if (nextDir[1] == 0) { inputQueue.push([0,-1]) }
+            break;
         }
-        if (`${e.code}` == "ArrowRight" || `${e.code}` == "KeyD") {
-          inputQueue.push([1,0])
-        }
-        if (`${e.code}` == "ArrowLeft" || `${e.code}` == "KeyA") {
-          inputQueue.push([-1,0])
-        }
-        if (`${e.code}` == "ArrowDown" || `${e.code}` == "KeyS") {
-          inputQueue.push([0,1])
-        }
-        if (`${e.code}` == "ArrowUp" || `${e.code}` == "KeyW") {
-          inputQueue.push([0,-1])
-        }
-    }
+      }
     </script>
   </head>
   <body>
