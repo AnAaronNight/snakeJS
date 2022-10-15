@@ -90,7 +90,7 @@ function gameTick() {
     // probably ought to check the wall collision so we can display a proper death message
     snake.dead = checkWallCollision();
     // now that we sorta know if it's dead or not, we can move the snake
-    updateSnakePos();
+    if (!snake.dead) { updateSnakePos() }
   }
   generateBoard();
   checkSelfCollision();
