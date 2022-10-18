@@ -24,36 +24,36 @@ function generateBoard() {
   // creates the board
   for (let i = 0; i < size; i++) {
     // adds a new row to the board with a single item
-    items.push(["⬛"]);
+    items.push([`⬛`]);
     // adds the rest of the items to the row
     for (let n = 1; n < size; n++) {
-      items[i][n] = "⬛";
+      items[i][n] = `⬛`;
     }
   }
 }
 function updateBoard() {
   // creates a new string called output
-  let output = "";
+  let output = ``;
   // adds to the string either the item in the board or a a line break between rows
   items.forEach(elementA => {
     elementA.forEach(elementB => {
       output += elementB;
     });
-    output += "<br>"
+    output += `<br>`
   });
   // sets the html display to the string we created
-  document.getElementById("demo").innerHTML = output;
+  document.getElementById(`demo`).innerHTML = output;
 }
 function drawSnake() {
   // loops through the snake's ordered pairs and sets the value at the corresponding spot on the board to a snake block
   for (let i = 0; i < (snake.pos.length); i++) {
-    items[snake.pos[i][1]][snake.pos[i][0]] = "⬜";
+    items[snake.pos[i][1]][snake.pos[i][0]] = `⬜`;
   }
 }
 function updateSnakePos() {
   if (!snake.dead) {
     // set the new head position to newPos
-    snake.pos.push(newPos)
+    snake.pos.push(newPos);
     // if the snake isn't eating, we want to get rid of the tail block
     if (!snake.eating) {
       snake.pos = snake.pos.slice(1);
@@ -64,15 +64,19 @@ function updateSnakePos() {
 }
 function generateApple() {
   // this loop runs until the apple does not exist inside the snake
-  for (let i = 0; items[applePos[1]][applePos[0]] == "⬜"; i++) {
+  for (let i = 0; items[applePos[1]][applePos[0]] == `⬜`; i++) {
     // if this is the first time this loop runs on this iteration of the function, a point is rewarded to the player
-    if (i == 0) {snake.len++; snake.eating = true; document.getElementById("score").innerHTML = "~ " + (snake.len - 3) + " ~";}
+    if (i == 0) {
+      snake.len++;
+      snake.eating = true;
+      document.getElementById(`score`).innerHTML = `~ ${snake.len - 3} ~`;
+    }
     // makes random x and y positions for the apple
     applePos[0] = [Math.floor(size*Math.random())]
     applePos[1] = [Math.floor(size*Math.random())]
   }
   // sets the value of the board at the apple's position to an apple block
-  items[applePos[1]][applePos[0]] = "🟦";
+  items[applePos[1]][applePos[0]] = `🟦`;
 }
 function gameTick() {
   // this if statement is designed so that it only runs if the player is ready to start
@@ -99,7 +103,7 @@ function gameTick() {
   updateBoard();
   // if the snake isn't dead, we want to have another game tick an eighth of a second later. if it is, we want to display a restart text
   if (!snake.dead) { setTimeout(() => {gameTick();}, 125) } 
-  else { document.getElementById("restart").innerHTML = "~ press space to restart ~" }
+  else { document.getElementById(`restart`).innerHTML = `~ press space to restart ~` }
 }
 function checkWallCollision() {
   if (size <= newPos[0] || 0 > newPos[0] || size <= newPos[1] || 0 > newPos[1]) { return true }
@@ -117,5 +121,5 @@ function checkSelfCollision() {
   }
 }
 // starts the game ticks
-document.getElementById("demo").style.fontSize = 61.75 / size + "vh"; // cellSize + "px";
+document.getElementById(`demo`).style.fontSize = 61.75 / size + `vh`; // cellSize + `px`;
 gameTick();
